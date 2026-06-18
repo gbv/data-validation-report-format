@@ -138,8 +138,7 @@ Only section [2](#errors) to [5](#reports), excluding examples and notes, and th
 An **error** is a JSON object with the following constraints: 
 
 - an error SHOULD have a field `message` with an **error message**, being a non-empty string.
-  Applications MAY use a default value for error messages. Language and localization of error
-  messages is out of the scope of this specification.
+  Applications MAY use a default value for error messages.
 
 - an error MAY have field `types` with an array of **error types**, each being a non-empty string.
   Error types can be used for grouping errors and to reference a cause or constraint being violated
@@ -158,6 +157,10 @@ By this definition the error `{}` is allowed and equivalent to `{"level":"error"
 :::
 
 A **nested error** is an error that is listed as part of a [locator] in its field `errors` or `reports`.
+
+::: {.callout-warning}
+Language and localization of error messages, and details of error types such as name and URL are out of the scope of this specification.
+:::
 
 # Positions
 
