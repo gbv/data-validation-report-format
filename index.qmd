@@ -290,6 +290,13 @@ The **identifier** locator format with name `id` and locator values being arbitr
 Dimensions are a subset of query languages. A dimension value refererences one element from a document. A query language (e.g. JSONPath, full XPath...) can locate a set of elements.
 :::
 
+
+The following EBNF grammar rules are used to define grammars of locator values:
+
+```{.ebnf}
+PositiveInteger     ::=  [1-9] [0-9]*
+```
+
 ## Sequential document models
 
 ### Offset number
@@ -299,7 +306,6 @@ The **offset number** locator format with name `number` is used to reference an 
 ```{.ebnf}
 OffsetNumber        ::=  NonNegativeInteger
 NonNegativeInteger  ::=  "0" | PositiveInteger
-PositiveInteger     ::=  [1-9] [0-9]*
 ```
 
 ### Character number
@@ -407,7 +413,6 @@ XMLLocator       ::=  ( "/" NodeTest )+ ( "/" AttributeTest )?
 NodeTest         ::=  QName Position?
 AttributeTest    ::=  "@" QName
 Position         ::=  "[ PositiveInteger "]"
-PositiveInteger  ::=  [1-9] [0-9]*
 ```
 
 Applications MUST NOT use one XML Locator to reference multiple XML elements. For this reason applications MAY always append the string `[1]` to an XML Locator if it does not end with a `Position` or `AttributeTest`.
