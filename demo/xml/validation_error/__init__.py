@@ -24,7 +24,7 @@ class Locator:
 
 
 class ValidationError(Exception):
-    """An Error of Data Validation Error Format."""
+    """An Error of Data Validation Report Format."""
 
     def __init__(self, message: str = "", **fields):
         self.message = str(message) or fields.get("message", "")

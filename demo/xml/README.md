@@ -1,4 +1,4 @@
-# XML Validator emitting Data Validation Error Format
+# XML Validator emitting Data Validation Report Format
 
 This directory contains a Python implementation of a validator for XML documents. It supports XML Schema to validate against.
 

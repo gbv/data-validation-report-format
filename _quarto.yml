@@ -9,7 +9,7 @@ manuscript:
   code-links:
    - repo
 
-repo-url: https://github.com/gbv/validation-error-format
+repo-url: https://github.com/gbv/data-validation-report-format
 
 resources:
   - schema.json

@@ -1,8 +1,8 @@
-# Data Validation Error Format
+# Data Validation Report Format (DVRF)
 
 This repository contains the specification of a data format to report validation errors of digital objects.
 
-The current draft is made available at <https://gbv.github.io/validation-error-format/>.
+The current draft is made available at <https://gbv.github.io/data-validation-report-format/>.
 
 ## tl;dr
 
