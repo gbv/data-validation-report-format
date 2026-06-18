@@ -6,9 +6,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="dcterms.date" content="2026-06-11">
+<meta name="dcterms.date" content="2026-06-18">
 
-<title>Data Validation Error Format</title>
+<title>Data Validation Report Format</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -82,14 +82,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <link rel="stylesheet" href="style.css">
-<meta name="citation_title" content="Data Validation Error Format">
+<meta name="citation_title" content="Data Validation Report Format">
 <meta name="citation_abstract" content="This document specifies a data format to report validation errors of digital objects with error positions independent from specifid document models.
 ">
 <meta name="citation_author" content="Jakob Voß">
-<meta name="citation_publication_date" content="2026-06-11">
-<meta name="citation_cover_date" content="2026-06-11">
+<meta name="citation_publication_date" content="2026-06-18">
+<meta name="citation_cover_date" content="2026-06-18">
 <meta name="citation_year" content="2026">
-<meta name="citation_online_date" content="2026-06-11">
+<meta name="citation_online_date" content="2026-06-18">
 <meta name="citation_language" content="en">
 </head>
 
@@ -98,7 +98,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <header id="title-block-header" class="quarto-title-block default toc-left page-columns page-full">
   <div class="quarto-title-banner page-columns page-full">
     <div class="quarto-title column-body">
-      <h1 class="title">Data Validation Error Format</h1>
+      <h1 class="title">Data Validation Report Format</h1>
             <p class="subtitle lead">Version 0.9.0</p>
           </div>
 
@@ -125,7 +125,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
                 <div>
             <div class="quarto-title-meta-heading">Published</div>
             <div class="quarto-title-meta-contents">
-              <p class="date">June 11, 2026</p>
+              <p class="date">June 18, 2026</p>
             </div>
           </div>
           
@@ -145,7 +145,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
     <div class="quarto-other-links-text-target">
-    <div class="quarto-code-links"><div class="quarto-title-meta-heading">Code Links</div><div class="quarto-title-meta-contents"><span><a href="https://github.com/gbv/validation-error-format/" target="_blank"><i class="bi bi-github"></i>GitHub Repo</a></span></div></div></div>  </div>
+    <div class="quarto-code-links"><div class="quarto-title-meta-heading">Code Links</div><div class="quarto-title-meta-contents"><span><a href="https://github.com/gbv/data-validation-report-format/" target="_blank"><i class="bi bi-github"></i>GitHub Repo</a></span></div></div></div>  </div>
 </header><div id="quarto-content" class="page-columns page-rows-contents page-layout-article toc-left">
 <div id="quarto-sidebar-toc-left" class="sidebar toc-left">
   <nav id="TOC" role="doc-toc" class="toc-active">
@@ -223,7 +223,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><em>All data is wrong, but some data is wrong on multiple levels.</em></p>
 </blockquote>
 <p>Data validation is a crucial part of management of data quality and interoperability. Validation is applied in many ways and contexts, for instance input forms and editors with visual feedback or schema languages with formal error reports. The diversity of use cases imply a variety of error results. Existing standards for error reporting such as such as <a href="https://github.com/testmoapp/junitxml">JUnit XML</a> and <a href="https://testanything.org/">Test Anything Protocol</a> have narrow use cases in software development.</p>
-<p>The specification of <strong>Data Validation Error Format</strong> has two goals:</p>
+<p>The specification of <strong>Data Validation Report Format</strong> (DVRF) has two goals:</p>
 <ul>
 <li>unify how validation errors are reported by different applications</li>
 <li>reference positions of errors in validated documents, independent from document models</li>
@@ -239,7 +239,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>This document is managed in a revision control system at <a href="https://github.com/gbv/validation-error-format" class="uri">https://github.com/gbv/validation-error-format</a>, including an <a href="https://github.com/gbv/validation-error-format/issues">issue tracker</a>.</p>
+<p>This document is managed in a revision control system at <a href="https://github.com/gbv/data-validation-report-format" class="uri">https://github.com/gbv/data-validation-report-format</a>, including an <a href="https://github.com/gbv/data-validation-report-format/issues">issue tracker</a>.</p>
 <section id="overview" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">1.1</span> Overview</h2>
 <p><a href="#fig-validation" class="quarto-xref">Figure&nbsp;1</a> illustrates the validation process and core concepts of this specification: a <strong>validator</strong> checks whether a <strong>document</strong> conforms to some requirements and returns either a list of <strong><a href="#error">errors</a></strong> or a <strong><a href="#report">report</a></strong> including such list in return. Each error can reference elements of the document via a <strong><a href="#position">position</a></strong> having <a href="#locators">locators</a>. A locator may contain nested errors or reports (not shown in the figure) with nested errors within the referenced element.</p>
@@ -502,7 +502,7 @@ Example&nbsp;6: Equivalent array of locators
 </figcaption>
 </figure>
 </div>
-<p>Applications MAY restrict their support of Data Validation Error Format to positions in condense form being locator maps.</p>
+<p>Applications MAY restrict their support of Data Validation Report Format to positions in condense form being locator maps.</p>
 </section>
 <section id="locators" class="level2" data-number="3.2">
 <h2 data-number="3.2" class="anchored" data-anchor-id="locators"><span class="header-section-number">3.2</span> Locators</h2>

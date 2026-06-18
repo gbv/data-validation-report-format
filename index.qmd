@@ -1,5 +1,5 @@
 ---
-title: Data Validation Error Format
+title: Data Validation Report Format
 subtitle: Version 0.9.0
 #doi: 10.5281/zenodo......
 authors:
@@ -17,7 +17,7 @@ abstract: |
 
 Data validation is a crucial part of management of data quality and interoperability. Validation is applied in many ways and contexts, for instance input forms and editors with visual feedback or schema languages with formal error reports. The diversity of use cases imply a variety of error results. Existing standards for error reporting such as such as [JUnit XML](https://github.com/testmoapp/junitxml) and [Test Anything Protocol](https://testanything.org/) have narrow use cases in software development.
 
-The specification of **Data Validation Error Format** has two goals:
+The specification of **Data Validation Report Format** (DVRF) has two goals:
 
 - unify how validation errors are reported by different applications
 - reference positions of errors in validated documents, independent from document models
@@ -28,7 +28,7 @@ Last but not least the format should help to better separate validation and pres
 The format is strictly limited to **errors** and **error positions**. Neither does it include other kinds of analysis results such as statistics and summaries of documents, nor does in include details about validation such as test cases, schema rules, and individual constraints. Errors can be linked to additional information with error types but the semantics of these types is out of the scope of this specification.
 :::
 
-This document is managed in a revision control system at <https://github.com/gbv/validation-error-format>, including an [issue tracker](https://github.com/gbv/validation-error-format/issues).
+This document is managed in a revision control system at <https://github.com/gbv/data-validation-report-format>, including an [issue tracker](https://github.com/gbv/data-validation-report-format/issues).
 
 ## Overview
 
@@ -191,7 +191,7 @@ A locator map can be transformed to an equivalent array of [locators](#locators)
 ]
 ```
 
-Applications MAY restrict their support of Data Validation Error Format to positions in condense form being  locator maps.
+Applications MAY restrict their support of Data Validation Report Format to positions in condense form being  locator maps.
 
 ## Locators
 
