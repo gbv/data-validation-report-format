@@ -138,8 +138,7 @@ Only section [2](#errors) to [5](#reports), excluding examples and notes, and th
 An **error** is a JSON object with the following constraints: 
 
 - an error SHOULD have a field `message` with an **error message**, being a non-empty string.
-  Applications MAY use a default value for error messages. Language and localization of error
-  messages is out of the scope of this specification.
+  Applications MAY use a default value for error messages.
 
 - an error MAY have field `types` with an array of **error types**, each being a non-empty string.
   Error types can be used for grouping errors and to reference a cause or constraint being violated
@@ -158,6 +157,10 @@ By this definition the error `{}` is allowed and equivalent to `{"level":"error"
 :::
 
 A **nested error** is an error that is listed as part of a [locator] in its field `errors` or `reports`.
+
+::: {.callout-warning}
+Language and localization of error messages, and details of error types such as name and URL are out of the scope of this specification.
+:::
 
 # Positions
 
@@ -239,7 +242,7 @@ Reports summarize errors of same type with additional metadata. A **Report** is 
 
 - the report MAY have field `totalFindings` with a non-negative integer number. The number MUST be equal to the sum of `totalCompliances`, `totalErrors`, and `totalSkipped` if all of the these fields are given.
 
-- the report SHOULD have field `complete` with a boolean value indicating whether the document was fully processed.
+- the report SHOULD have field `partial` with a boolean value or an array of [errors] to indicate when the document was fully validated. The errors listed in this array MUST NOT be confused with validation errors found by validation. Instead they refer to errors of the execution of validation process.
 
 - the report MAY have field `duration` with a non-negative number giving the time in seconds it took to create the report.
 
