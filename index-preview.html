@@ -610,7 +610,7 @@ Example&nbsp;6: Equivalent array of locators
 <ul>
 <li><p>the locator MUST have a field <code>dimension</code> with the name of a <a href="#dimensions"><strong>dimension</strong></a>. Some dimensions imply a document model on elements referenced by locators of this dimension.</p></li>
 <li><p>the locator MUST have a field <code>address</code> with the <strong>address</strong>, being a string conforming to the <strong>locator format</strong> identified by the name of the <strong>dimension</strong>.</p></li>
-<li><p>the locator MAY have a field <code>value</code> with the referenced element encoded as JSON object that maps data formats to serializations in some reasonable form (typically as JSON string). The value MUST be derived from the document, dimension, and address. Applications MAY replace the field with another value derived from document, dimension, and address.</p></li>
+<li><p>the locator MAY have a field <code>value</code> with the referenced element encoded as JSON object that maps document model names (some included in the the table of <a href="#dimensions">dimensions</a>) to serializations in some reasonable form (typically as JSON string). The value MUST be derived from the document, dimension, and address. Applications MAY replace the field with another value derived from document, dimension, and address.</p></li>
 <li><p>the locator MAY have either a field <code>errors</code> with an array of <a href="#errors"><strong>errors</strong></a> within the located element or a field <code>reports</code> with an array of <a href="#reports"><strong>reports</strong></a> for the located element. Errors in field <code>errors</code> of a locator or as part of a report are called <strong>nested errors</strong>.</p></li>
 </ul>
 <div id="lst-locator" class="json listing quarto-float quarto-figure quarto-figure-left anchored">
@@ -756,7 +756,7 @@ Example&nbsp;10: A locator for a file with a report
 <tr class="odd">
 <td style="text-align: left;"><code>char</code></td>
 <td><a href="#character-number">character number</a></td>
-<td>character string</td>
+<td>character string (<code>string</code>)</td>
 <td>character</td>
 </tr>
 <tr class="even">
@@ -804,13 +804,13 @@ Example&nbsp;10: A locator for a file with a report
 <tr class="odd">
 <td style="text-align: left;"><code>jsonpointer</code></td>
 <td><a href="#json-pointer">JSON Pointer</a></td>
-<td>JSON value</td>
+<td>JSON value (<code>json</code>)</td>
 <td>JSON value</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;"><code>xpath</code></td>
 <td><a href="#xml-locator">XML Locator</a></td>
-<td>XML or compatible hierarchies</td>
+<td>XML or compatible hierarchies (<code>xml</code>)</td>
 <td>XML element or attribute</td>
 </tr>
 </tbody>
