@@ -267,6 +267,7 @@
   <li><a href="#offset-number" id="toc-offset-number" class="nav-link" data-scroll-target="#offset-number">Offset number</a></li>
   <li><a href="#character-number" id="toc-character-number" class="nav-link" data-scroll-target="#character-number">Character number</a></li>
   <li><a href="#line-number" id="toc-line-number" class="nav-link" data-scroll-target="#line-number">Line number</a></li>
+  <li><a href="#line-numbers" id="toc-line-numbers" class="nav-link" data-scroll-target="#line-numbers">Line numbers</a></li>
   <li><a href="#line-and-column" id="toc-line-and-column" class="nav-link" data-scroll-target="#line-and-column">Line and Column</a></li>
   </ul></li>
   <li><a href="#tabular-document-models" id="toc-tabular-document-models" class="nav-link" data-scroll-target="#tabular-document-models"><span class="header-section-number">5.2</span> Tabular document models</a>
@@ -765,42 +766,48 @@ Example&nbsp;10: A locator for a file with a report
 <td>character string</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;"><code>lines</code></td>
+<td><a href="#line-numbers">line numbers</a></td>
+<td>sequence of character strings</td>
+<td>sequence of character strings</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;"><code>linecol</code></td>
 <td><a href="#line-and-column">line and column</a></td>
 <td>sequence of character strings</td>
 <td>character</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"><code>cell</code></td>
 <td><a href="#cell-reference">cell reference</a></td>
 <td>tabular data</td>
 <td>-</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"><code>cells</code></td>
 <td><a href="#cell-range">cell range</a></td>
 <td>tabular data</td>
 <td>tabular data</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"><code>rfc7111</code></td>
 <td><a href="#table-selection">table selection</a></td>
 <td>tabular data</td>
 <td>tabular data</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"><code>file</code></td>
 <td><a href="#file-path">file path</a></td>
 <td>directory tree</td>
 <td>-</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"><code>jsonpointer</code></td>
 <td><a href="#json-pointer">JSON Pointer</a></td>
 <td>JSON value</td>
 <td>JSON value</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"><code>xpath</code></td>
 <td><a href="#xml-locator">XML Locator</a></td>
 <td>XML or compatible hierarchies</td>
@@ -824,6 +831,9 @@ Example&nbsp;10: A locator for a file with a report
 <section id="offset-number" class="level3">
 <h3 class="anchored" data-anchor-id="offset-number">Offset number</h3>
 <p>The <strong>offset number</strong> locator format with name <code>number</code> is used to reference an element in a sequence of elements. The locator value is non-negative integer encoded as string without leading zeroes. The first element has number zero (locator value <code>0</code>).</p>
+<pre class="ebnf"><code>OffsetNumber        ::=  NonNegativeInteger
+NonNegativeInteger  ::=  "0" | PositiveInteger
+PositiveInteger     ::=  [1-9] [0-9]*</code></pre>
 </section>
 <section id="character-number" class="level3">
 <h3 class="anchored" data-anchor-id="character-number">Character number</h3>
@@ -832,6 +842,7 @@ Example&nbsp;10: A locator for a file with a report
 <!--
 Unicode strings are sequences as well but its not obvious whether the elements are code points, code units or characters.
 -->
+<pre class="ebnf"><code>CharacterNumber ::=  PositiveInteger</code></pre>
 </section>
 <section id="line-number" class="level3">
 <h3 class="anchored" data-anchor-id="line-number">Line number</h3>
@@ -846,10 +857,19 @@ Unicode strings are sequences as well but its not obvious whether the elements a
 </div>
 </div>
 </div>
+<pre class="ebnf"><code>LineNumber      ::=  PositiveInteger</code></pre>
+</section>
+<section id="line-numbers" class="level3">
+<h3 class="anchored" data-anchor-id="line-numbers">Line numbers</h3>
+<p>The <strong>line numbers</strong> locator format with name <code>lines</code> is used to reference a sequence of consecutive line (each being a character string) from a sequence of lines. The locator value is two positive integers encoded as string without leading zeroes and separated with minus <code>-</code>. The second integer MUST NOT be larger than the first. The first line has number one (locator value <code>1</code>).</p>
+<pre class="ebnf"><code>LineNumbers     ::=  StartLine "-" EndLine
+StartLine       ::=  PositiveInteger
+EndLine         ::=  PositiveInteger</code></pre>
 </section>
 <section id="line-and-column" class="level3">
 <h3 class="anchored" data-anchor-id="line-and-column">Line and Column</h3>
 <p>The <strong>line and column</strong> locator format with name <code>linecol</code> is used to reference a character in a sequence of character strings. The locator value consists of a <a href="#line-number">line number</a> and a <a href="#character-number">character number</a> within the line, separated by colon (<code>:</code>).</p>
+<pre class="ebnf"><code>LineCol         ::=  LineNumber ":" CharacterNumber</code></pre>
 </section>
 </section>
 <section id="tabular-document-models" class="level2" data-number="5.2">
@@ -861,11 +881,11 @@ Unicode strings are sequences as well but its not obvious whether the elements a
 </div>
 <div class="callout-body-container">
 <p>Tabular data is known from spreadsheet software and CSV files. This document model does <em>not</em> include table headers! A table with header column and unique column names can better be mapped to a <a href="#hierarchical-document-models">hierarchical model</a> or modelled as sequence of indexed sets. For instance an error in column <code>title</code> of the third row of a table (not counting the header row) could have the following <a href="#locators">locator</a>:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"dimension"</span><span class="fu">:</span> <span class="st">"offset"</span><span class="fu">,</span> <span class="dt">"address"</span><span class="fu">:</span> <span class="st">"3"</span><span class="fu">,</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"errors"</span><span class="fu">:</span> <span class="ot">[</span> <span class="fu">{</span> <span class="dt">"position"</span><span class="fu">:</span> <span class="ot">[</span> </span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">"dimension"</span><span class="fu">:</span> <span class="st">"id"</span><span class="fu">,</span> <span class="dt">"address"</span><span class="fu">:</span> <span class="st">"title"</span> <span class="fu">}</span> <span class="ot">]</span> <span class="fu">}</span> <span class="ot">]</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"dimension"</span><span class="fu">:</span> <span class="st">"offset"</span><span class="fu">,</span> <span class="dt">"address"</span><span class="fu">:</span> <span class="st">"3"</span><span class="fu">,</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"errors"</span><span class="fu">:</span> <span class="ot">[</span> <span class="fu">{</span> <span class="dt">"position"</span><span class="fu">:</span> <span class="ot">[</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span> <span class="dt">"dimension"</span><span class="fu">:</span> <span class="st">"id"</span><span class="fu">,</span> <span class="dt">"address"</span><span class="fu">:</span> <span class="st">"title"</span> <span class="fu">}</span> <span class="ot">]</span> <span class="fu">}</span> <span class="ot">]</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -886,8 +906,7 @@ Rows            ::=  "row=" RowPosition ( "-" RowPosition )?
 Columns         ::=  "col=" ColPosition ( "-" ColPosition )?
 CellPosition    ::=  RowPosition "," ColPosition
 ColPosition     ::=  PositiveInteger
-RowPosition     ::=  PositiveInteger
-PositiveInteger ::=  [1-9] [0-9]*</code></pre>
+RowPosition     ::=  PositiveInteger</code></pre>
 <div class="callout callout-style-simple callout-note">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -966,118 +985,118 @@ PositiveInteger  ::=  [1-9] [0-9]*</code></pre>
 <section id="json-schema" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="json-schema">JSON Schema</h2>
 <p>Error records can be validated with the following non-normative JSON Schema (<a href="schema.json"><code>schema.json</code></a> in the specification repository):</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"$schema"</span><span class="fu">:</span> <span class="st">"http://json-schema.org/draft-07/schema#"</span><span class="fu">,</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"object"</span><span class="fu">,</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"properties"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"message"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span> <span class="dt">"minLength"</span><span class="fu">:</span> <span class="dv">1</span> <span class="fu">},</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"types"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/types"</span> <span class="fu">},</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"level"</span><span class="fu">:</span> <span class="fu">{</span> </span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"enum"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"error"</span><span class="ot">,</span> <span class="st">"warning"</span><span class="ot">,</span> <span class="st">"info"</span><span class="ot">]</span><span class="fu">,</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"default"</span><span class="fu">:</span> <span class="st">"error"</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"position"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/position"</span> <span class="fu">}</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"$defs"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"errors"</span><span class="fu">:</span> <span class="fu">{</span> </span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"array"</span><span class="fu">,</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"items"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#"</span> <span class="fu">}</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"types"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"array"</span><span class="fu">,</span></span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"items"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"minLength"</span><span class="fu">:</span> <span class="dv">1</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"position"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"anyOf"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"array"</span><span class="fu">,</span></span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"items"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/locator"</span> </span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>          <span class="fu">}</span></span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/namedMap"</span> <span class="fu">}</span></span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span></span>
-<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
-<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"locator"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"object"</span><span class="fu">,</span></span>
-<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"allOf"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
-<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"properties"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"dimension"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>              <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span></span>
-<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>              <span class="dt">"pattern"</span><span class="fu">:</span> <span class="st">"^[a-z][a-z0-9]*$"</span></span>
-<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>            <span class="fu">},</span></span>
-<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"address"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span> <span class="fu">},</span></span>
-<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"value"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/namedMap"</span> <span class="fu">}</span></span>
-<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>          <span class="fu">}</span></span>
-<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span><span class="ot">,</span> <span class="fu">{</span></span>
-<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"oneOf"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
-<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>              <span class="dt">"properties"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"errors"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/errors"</span> <span class="fu">}</span></span>
-<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>              <span class="fu">},</span></span>
-<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>              <span class="dt">"properties"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"reports"</span><span class="fu">:</span> <span class="fu">{</span> </span>
-<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>                  <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"array"</span><span class="fu">,</span></span>
-<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>                  <span class="dt">"items"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/report"</span> <span class="fu">}</span></span>
-<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>                <span class="fu">}</span></span>
-<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a>              <span class="fu">}</span></span>
-<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
-<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>          <span class="ot">]</span></span>
-<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span> <span class="ot">]</span><span class="fu">,</span></span>
-<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"required"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"dimension"</span><span class="ot">,</span> <span class="st">"address"</span><span class="ot">]</span></span>
-<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
-<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"positions"</span><span class="fu">:</span> <span class="fu">{</span> </span>
-<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"array"</span><span class="fu">,</span></span>
-<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"items"</span><span class="fu">:</span> <span class="fu">{</span> </span>
-<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"anyOf"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a>          <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/position"</span> <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a>          <span class="fu">{</span> <span class="dt">"const"</span><span class="fu">:</span> <span class="kw">null</span> <span class="fu">}</span></span>
-<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
-<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
-<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
-<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"namedMap"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"object"</span><span class="fu">,</span></span>
-<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"patternProperties"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"^[a-z][a-z0-9]*$"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span></span>
-<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
-<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
-<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"additionalProperties"</span><span class="fu">:</span> <span class="kw">false</span></span>
-<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
-<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"report"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"object"</span><span class="fu">,</span></span>
-<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"properties"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"types"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/types"</span> <span class="fu">},</span></span>
-<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"errors"</span><span class="fu">:</span> <span class="fu">{</span> </span>
-<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"array"</span><span class="fu">,</span></span>
-<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"items"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"anyOf"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a>              <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#"</span> <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a>              <span class="fu">{</span> <span class="dt">"const"</span><span class="fu">:</span> <span class="kw">null</span> <span class="fu">}</span></span>
-<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a>            <span class="ot">]</span></span>
-<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a>          <span class="fu">}</span></span>
-<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a>        <span class="fu">},</span></span>
-<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"compliances"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/positions"</span> <span class="fu">},</span></span>
-<span id="cb14-98"><a href="#cb14-98" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"skipped"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/positions"</span> <span class="fu">},</span></span>
-<span id="cb14-99"><a href="#cb14-99" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"totalErrors"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"integer"</span><span class="fu">,</span> <span class="dt">"minimum"</span><span class="fu">:</span> <span class="dv">0</span> <span class="fu">},</span></span>
-<span id="cb14-100"><a href="#cb14-100" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"totalCompliances"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"integer"</span><span class="fu">,</span> <span class="dt">"minimum"</span><span class="fu">:</span> <span class="dv">0</span> <span class="fu">},</span></span>
-<span id="cb14-101"><a href="#cb14-101" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"totalSkipped"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"integer"</span><span class="fu">,</span> <span class="dt">"minimum"</span><span class="fu">:</span> <span class="dv">0</span> <span class="fu">},</span></span>
-<span id="cb14-102"><a href="#cb14-102" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"totalFindings"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"integer"</span><span class="fu">,</span> <span class="dt">"minimum"</span><span class="fu">:</span> <span class="dv">0</span> <span class="fu">},</span></span>
-<span id="cb14-103"><a href="#cb14-103" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"partial"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"oneOf"</span><span class="fu">:</span> <span class="ot">[</span></span>
-<span id="cb14-104"><a href="#cb14-104" aria-hidden="true" tabindex="-1"></a>          <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"boolean"</span> <span class="fu">}</span><span class="ot">,</span></span>
-<span id="cb14-105"><a href="#cb14-105" aria-hidden="true" tabindex="-1"></a>          <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"array"</span><span class="fu">,</span> <span class="dt">"items"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#"</span> <span class="fu">}</span> <span class="fu">}</span></span>
-<span id="cb14-106"><a href="#cb14-106" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span> <span class="fu">},</span></span>
-<span id="cb14-107"><a href="#cb14-107" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"duration"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"number"</span><span class="fu">,</span> <span class="dt">"minimum"</span><span class="fu">:</span> <span class="dv">0</span> <span class="fu">}</span></span>
-<span id="cb14-108"><a href="#cb14-108" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
-<span id="cb14-109"><a href="#cb14-109" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"required"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"errors"</span><span class="ot">]</span></span>
-<span id="cb14-110"><a href="#cb14-110" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
-<span id="cb14-111"><a href="#cb14-111" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb14-112"><a href="#cb14-112" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"$schema"</span><span class="fu">:</span> <span class="st">"http://json-schema.org/draft-07/schema#"</span><span class="fu">,</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"object"</span><span class="fu">,</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"properties"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"message"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span> <span class="dt">"minLength"</span><span class="fu">:</span> <span class="dv">1</span> <span class="fu">},</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"types"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/types"</span> <span class="fu">},</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"level"</span><span class="fu">:</span> <span class="fu">{</span> </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"enum"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"error"</span><span class="ot">,</span> <span class="st">"warning"</span><span class="ot">,</span> <span class="st">"info"</span><span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"default"</span><span class="fu">:</span> <span class="st">"error"</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"position"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/position"</span> <span class="fu">}</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"$defs"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"errors"</span><span class="fu">:</span> <span class="fu">{</span> </span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"array"</span><span class="fu">,</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"items"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#"</span> <span class="fu">}</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"types"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"array"</span><span class="fu">,</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"items"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"minLength"</span><span class="fu">:</span> <span class="dv">1</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"position"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"anyOf"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"array"</span><span class="fu">,</span></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"items"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/locator"</span> </span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>          <span class="fu">}</span></span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/namedMap"</span> <span class="fu">}</span></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span></span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"locator"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"object"</span><span class="fu">,</span></span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"allOf"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"properties"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"dimension"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a>              <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span><span class="fu">,</span></span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a>              <span class="dt">"pattern"</span><span class="fu">:</span> <span class="st">"^[a-z][a-z0-9]*$"</span></span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a>            <span class="fu">},</span></span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"address"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span> <span class="fu">},</span></span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"value"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/namedMap"</span> <span class="fu">}</span></span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a>          <span class="fu">}</span></span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span><span class="ot">,</span> <span class="fu">{</span></span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"oneOf"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a>            <span class="fu">{</span></span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a>              <span class="dt">"properties"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"errors"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/errors"</span> <span class="fu">}</span></span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a>              <span class="fu">},</span></span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a>              <span class="dt">"properties"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-56"><a href="#cb19-56" aria-hidden="true" tabindex="-1"></a>                <span class="dt">"reports"</span><span class="fu">:</span> <span class="fu">{</span> </span>
+<span id="cb19-57"><a href="#cb19-57" aria-hidden="true" tabindex="-1"></a>                  <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"array"</span><span class="fu">,</span></span>
+<span id="cb19-58"><a href="#cb19-58" aria-hidden="true" tabindex="-1"></a>                  <span class="dt">"items"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/report"</span> <span class="fu">}</span></span>
+<span id="cb19-59"><a href="#cb19-59" aria-hidden="true" tabindex="-1"></a>                <span class="fu">}</span></span>
+<span id="cb19-60"><a href="#cb19-60" aria-hidden="true" tabindex="-1"></a>              <span class="fu">}</span></span>
+<span id="cb19-61"><a href="#cb19-61" aria-hidden="true" tabindex="-1"></a>            <span class="fu">}</span></span>
+<span id="cb19-62"><a href="#cb19-62" aria-hidden="true" tabindex="-1"></a>          <span class="ot">]</span></span>
+<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span> <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb19-64"><a href="#cb19-64" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"required"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"dimension"</span><span class="ot">,</span> <span class="st">"address"</span><span class="ot">]</span></span>
+<span id="cb19-65"><a href="#cb19-65" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb19-66"><a href="#cb19-66" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"positions"</span><span class="fu">:</span> <span class="fu">{</span> </span>
+<span id="cb19-67"><a href="#cb19-67" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"array"</span><span class="fu">,</span></span>
+<span id="cb19-68"><a href="#cb19-68" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"items"</span><span class="fu">:</span> <span class="fu">{</span> </span>
+<span id="cb19-69"><a href="#cb19-69" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"anyOf"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb19-70"><a href="#cb19-70" aria-hidden="true" tabindex="-1"></a>          <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/position"</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb19-71"><a href="#cb19-71" aria-hidden="true" tabindex="-1"></a>          <span class="fu">{</span> <span class="dt">"const"</span><span class="fu">:</span> <span class="kw">null</span> <span class="fu">}</span></span>
+<span id="cb19-72"><a href="#cb19-72" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span></span>
+<span id="cb19-73"><a href="#cb19-73" aria-hidden="true" tabindex="-1"></a>      <span class="fu">}</span></span>
+<span id="cb19-74"><a href="#cb19-74" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb19-75"><a href="#cb19-75" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"namedMap"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-76"><a href="#cb19-76" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"object"</span><span class="fu">,</span></span>
+<span id="cb19-77"><a href="#cb19-77" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"patternProperties"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-78"><a href="#cb19-78" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"^[a-z][a-z0-9]*$"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-79"><a href="#cb19-79" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"string"</span></span>
+<span id="cb19-80"><a href="#cb19-80" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
+<span id="cb19-81"><a href="#cb19-81" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb19-82"><a href="#cb19-82" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"additionalProperties"</span><span class="fu">:</span> <span class="kw">false</span></span>
+<span id="cb19-83"><a href="#cb19-83" aria-hidden="true" tabindex="-1"></a>    <span class="fu">},</span></span>
+<span id="cb19-84"><a href="#cb19-84" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"report"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-85"><a href="#cb19-85" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"object"</span><span class="fu">,</span></span>
+<span id="cb19-86"><a href="#cb19-86" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"properties"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-87"><a href="#cb19-87" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"types"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/types"</span> <span class="fu">},</span></span>
+<span id="cb19-88"><a href="#cb19-88" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"errors"</span><span class="fu">:</span> <span class="fu">{</span> </span>
+<span id="cb19-89"><a href="#cb19-89" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"array"</span><span class="fu">,</span></span>
+<span id="cb19-90"><a href="#cb19-90" aria-hidden="true" tabindex="-1"></a>          <span class="dt">"items"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-91"><a href="#cb19-91" aria-hidden="true" tabindex="-1"></a>            <span class="dt">"anyOf"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb19-92"><a href="#cb19-92" aria-hidden="true" tabindex="-1"></a>              <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#"</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb19-93"><a href="#cb19-93" aria-hidden="true" tabindex="-1"></a>              <span class="fu">{</span> <span class="dt">"const"</span><span class="fu">:</span> <span class="kw">null</span> <span class="fu">}</span></span>
+<span id="cb19-94"><a href="#cb19-94" aria-hidden="true" tabindex="-1"></a>            <span class="ot">]</span></span>
+<span id="cb19-95"><a href="#cb19-95" aria-hidden="true" tabindex="-1"></a>          <span class="fu">}</span></span>
+<span id="cb19-96"><a href="#cb19-96" aria-hidden="true" tabindex="-1"></a>        <span class="fu">},</span></span>
+<span id="cb19-97"><a href="#cb19-97" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"compliances"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/positions"</span> <span class="fu">},</span></span>
+<span id="cb19-98"><a href="#cb19-98" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"skipped"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#/$defs/positions"</span> <span class="fu">},</span></span>
+<span id="cb19-99"><a href="#cb19-99" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"totalErrors"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"integer"</span><span class="fu">,</span> <span class="dt">"minimum"</span><span class="fu">:</span> <span class="dv">0</span> <span class="fu">},</span></span>
+<span id="cb19-100"><a href="#cb19-100" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"totalCompliances"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"integer"</span><span class="fu">,</span> <span class="dt">"minimum"</span><span class="fu">:</span> <span class="dv">0</span> <span class="fu">},</span></span>
+<span id="cb19-101"><a href="#cb19-101" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"totalSkipped"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"integer"</span><span class="fu">,</span> <span class="dt">"minimum"</span><span class="fu">:</span> <span class="dv">0</span> <span class="fu">},</span></span>
+<span id="cb19-102"><a href="#cb19-102" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"totalFindings"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"integer"</span><span class="fu">,</span> <span class="dt">"minimum"</span><span class="fu">:</span> <span class="dv">0</span> <span class="fu">},</span></span>
+<span id="cb19-103"><a href="#cb19-103" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"partial"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"oneOf"</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb19-104"><a href="#cb19-104" aria-hidden="true" tabindex="-1"></a>          <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"boolean"</span> <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb19-105"><a href="#cb19-105" aria-hidden="true" tabindex="-1"></a>          <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"array"</span><span class="fu">,</span> <span class="dt">"items"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"$ref"</span><span class="fu">:</span> <span class="st">"#"</span> <span class="fu">}</span> <span class="fu">}</span></span>
+<span id="cb19-106"><a href="#cb19-106" aria-hidden="true" tabindex="-1"></a>        <span class="ot">]</span> <span class="fu">},</span></span>
+<span id="cb19-107"><a href="#cb19-107" aria-hidden="true" tabindex="-1"></a>        <span class="dt">"duration"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"type"</span><span class="fu">:</span> <span class="st">"number"</span><span class="fu">,</span> <span class="dt">"minimum"</span><span class="fu">:</span> <span class="dv">0</span> <span class="fu">}</span></span>
+<span id="cb19-108"><a href="#cb19-108" aria-hidden="true" tabindex="-1"></a>      <span class="fu">},</span></span>
+<span id="cb19-109"><a href="#cb19-109" aria-hidden="true" tabindex="-1"></a>      <span class="dt">"required"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"errors"</span><span class="ot">]</span></span>
+<span id="cb19-110"><a href="#cb19-110" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb19-111"><a href="#cb19-111" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb19-112"><a href="#cb19-112" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="sec-additional-dimensions" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="sec-additional-dimensions">Additional dimensions</h2>
@@ -1085,19 +1104,19 @@ PositiveInteger  ::=  [1-9] [0-9]*</code></pre>
 <section id="fq" class="level3">
 <h3 class="anchored" data-anchor-id="fq">fq</h3>
 <p>The <a href="https://github.com/wader/fq?tab=readme-ov-file#fq">fq</a> tool supports analysis of many <a href="https://github.com/wader/fq/blob/master/doc/formats.md">binary formats</a> so it could be used to locate elements of binary data models. The locator value would be the format, followed by a colon, followed by a path expression:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode .json code-with-copy"><code class="sourceCode json"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"message"</span><span class="fu">:</span> <span class="st">"Timestamp of .gz archive must not be in the future"</span><span class="fu">,</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"position"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"fq"</span><span class="fu">:</span> <span class="st">"gzip:.members[0].mtime"</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"message"</span><span class="fu">:</span> <span class="st">"Image width of PNG file is too large"</span><span class="fu">,</span></span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"position"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"fq"</span><span class="fu">:</span> <span class="st">"png:.chunks[0].width"</span></span>
-<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode .json code-with-copy"><code class="sourceCode json"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"message"</span><span class="fu">:</span> <span class="st">"Timestamp of .gz archive must not be in the future"</span><span class="fu">,</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"position"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"fq"</span><span class="fu">:</span> <span class="st">"gzip:.members[0].mtime"</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"message"</span><span class="fu">:</span> <span class="st">"Image width of PNG file is too large"</span><span class="fu">,</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"position"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"fq"</span><span class="fu">:</span> <span class="st">"png:.chunks[0].width"</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="rdfterm" class="level3">
 <h3 class="anchored" data-anchor-id="rdfterm">rdfterm</h3>
