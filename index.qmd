@@ -242,7 +242,7 @@ Reports summarize errors of same type with additional metadata. A **Report** is 
 
 - the report MAY have field `totalFindings` with a non-negative integer number. The number MUST be equal to the sum of `totalCompliances`, `totalErrors`, and `totalSkipped` if all of the these fields are given.
 
-- the report SHOULD have field `complete` with a boolean value indicating whether the document was fully processed.
+- the report SHOULD have field `partial` with a boolean value or an array of [errors] to indicate when the document was fully validated. The errors listed in this array MUST NOT be confused with validation errors found by validation. Instead they refer to errors of the execution of validation process.
 
 - the report MAY have field `duration` with a non-negative number giving the time in seconds it took to create the report.
 

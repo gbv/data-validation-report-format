@@ -100,7 +100,10 @@
         "totalCompliances": { "type": "integer", "minimum": 0 },
         "totalSkipped": { "type": "integer", "minimum": 0 },
         "totalFindings": { "type": "integer", "minimum": 0 },
-        "complete": { "type": "boolean" },
+        "partial": { "oneOf": [
+          { "type": "boolean" },
+          { "type": "array", "items": { "$ref": "#" } }
+        ] },
         "duration": { "type": "number", "minimum": 0 }
       },
       "required": ["errors"]
