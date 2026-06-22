@@ -2,7 +2,10 @@ default:
 	quarto preview
 
 docs:
-	quarto render
+	quarto render --to html
+
+pdf:
+	quarto render --to pdf || quarto render --to pdf
 
 test:
 	@npm run --silent ajv -- compile -s schema.json

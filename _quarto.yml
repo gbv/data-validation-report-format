@@ -14,6 +14,7 @@ repo-url: https://github.com/gbv/data-validation-report-format
 resources:
   - schema.json
   - overview.svg
+  - index.pdf # built locally
 
 callout-appearance: simple
 number-sections: true
