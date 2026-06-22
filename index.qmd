@@ -76,19 +76,19 @@ Example of encodings and locator formats
 
 ## Examples
 
-Documents can be invalid on many levels. For example, the string `{"åå":5}` is valid JSON, but it might be invalid if element `åå` is expected to hold a string instead of a number (@lst-example-1). The error can be located with a JSON Pointer in the JSON document and with character and line number:
+Documents can be invalid on many levels. For example, the string `{"åå":5}` is valid JSON, but it might be invalid if element `åå` is expected to hold a string instead of a number (@lst-example-1). The error can be located with a JSON Pointer in the JSON document and with character and line number.
 
 ```{#lst-example-1 .json lst-cap="Error in a JSON document"}
 {{< include examples/example-1.json >}}
 ```
 
-The string could also be part of a larger, newline-delimited JSON document. In this case it makes sense to use a nested error (@lst-example-4):
+The string could also be part of a larger, newline-delimited JSON document. In this case it makes sense to use a nested error (@lst-example-4).
 
 ```{#lst-example-4 .json lst-cap="Error in a newline-delimited JSON document"}
 {{< include examples/example-4.json >}}
 ```
 
-The document could also be invalid at JSON syntax level, for example, if the closing `}` is missing (@lst-example-2):
+The document could also be invalid at JSON syntax level, for example, if the closing `}` is missing (@lst-example-2).
 
 ```{#lst-example-2 .json lst-cap="Error in JSON syntax"}
 {{< include examples/example-2.json >}}
@@ -131,7 +131,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHOULD", "SHOULD NOT", "RECOMMEND
 
 Formal grammars in this specification are given in EBNF notation as defined in Extensible Markup Language (XML) 1.1 [section 6](https://www.w3.org/TR/xml11/#sec-notation).
 
-Only section [2](#errors) to [5](#reports), excluding examples and notes, and the [list of normative references](#normative-references) are normative parts of this specification.
+Only section [2](#errors) to [5](#reports) (excluding examples and notes) and the [list of normative references](#normative-references) are normative parts of this specification.
 
 \pagebreak
 
@@ -152,7 +152,7 @@ An **error** is a JSON object with the following constraints:
 - An error MAY have a field `position` with a [**position**](#positions).
   Applications MUST NOT differentiate between no position and an empty position (an empty array or an empty JSON object).
 
-Applications MUST use individual errors for individual positions of the kind of observation represented by the error. For instance, a malformed character occurring two times in a document results in two errors.
+Applications MUST use individual errors for individual positions of the kind of observation represented by the error. For instance, a malformed character occurring two times in a document results in two errors with a common error type.
 
 ::: {.callout-note}
 By this definition the error `{}` is allowed and equivalent to `{"level":"error"}`.
@@ -245,7 +245,7 @@ Reports summarize errors of the same type with additional metadata. A **report**
 
 - A report MAY have a field `totalFindings` with a non-negative integer number. The number MUST be equal to the sum of `totalCompliances`, `totalErrors`, and `totalSkipped` if all of these fields are given.
 
-- A report SHOULD have a field `partial` with a boolean value or an array of [errors] to indicate when the document was fully validated. The errors listed in this array MUST NOT be confused with validation errors found by validation. Instead, they refer to errors of the execution of the validation process.
+- A report SHOULD have a field `partial` with a boolean value indicating when the document was not fully validated, or an array of [errors]. The errors listed in this array MUST NOT be confused with validation errors found by validation. Instead, they refer to errors of the execution of the validation process.
 
 - A report MAY have a field `duration` with a non-negative number giving the time in seconds it took to create the report.
 
@@ -496,6 +496,8 @@ XML Locator is a proper subset of (X)Path Expressions from [XPath] specification
 
 - Version 0.1.0 was written and made public in June 2025 after the format had been used since Feburary 2022.
 
+See <https://github.com/gbv/validation-error-format/> for current draft version and issue tracker for feedback.
+
 ## Acknowledgements {-}
 
 Thanks to Markus Matoni and Arno Kesper for their work on [project AQinDa](https://gepris.dfg.de/gepris/projekt/521659096) that resulted in the inclusion of error reports in this specification.
@@ -527,7 +529,7 @@ The [fq] tool supports analysis of many [binary formats](https://github.com/wade
 
 The dimension with name `rdfterm` follows locator format `object` of [RDF 1.1. N-Triples Grammar](https://www.w3.org/TR/n-triples/#n-triples-grammar) to locate an RDF term in a RDF graph, both defined in as defined in [RDF 1.1 Concepts and Abstract Syntax](https://www.w3.org/TR/rdf11-concepts/).
 
-The locator format can also be used to locate the focus node of a [SHACL Validation Report](https://www.w3.org/TR/shacl/#validation-report).
+The locator format could also be used to locate the focus node of a [SHACL Validation Report](https://www.w3.org/TR/shacl/#validation-report).
 
 ### turtle
 
@@ -537,5 +539,5 @@ The dimension with name `turtle` follows RDF-Turtle syntax to locate a set of RD
 
 The dimension with name `triplepattern` follows of locator format subset of Property Path Pattern from [SPARQL 1.1 Query Language](https://www.w3.org/TR/sparql11-query/) to locate a set of RDF Triples in a RDF graph.
 
-The locator format can also be used to reference the focus node, path and value of a [SHACL Validation Report](https://www.w3.org/TR/shacl/#validation-report).
+The locator format could also be used to reference the focus node, path and value of a [SHACL Validation Report](https://www.w3.org/TR/shacl/#validation-report).
 
