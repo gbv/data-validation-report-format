@@ -297,10 +297,9 @@
   <li><a href="#normative-references" id="toc-normative-references" class="nav-link" data-scroll-target="#normative-references"><span class="header-section-number">6.1</span> Normative References</a></li>
   <li><a href="#informative-references" id="toc-informative-references" class="nav-link" data-scroll-target="#informative-references"><span class="header-section-number">6.2</span> Informative references</a></li>
   </ul></li>
-  <li><a href="#changelog" id="toc-changelog" class="nav-link" data-scroll-target="#changelog">Changelog</a></li>
   <li><a href="#appendices" id="toc-appendices" class="nav-link" data-scroll-target="#appendices">Appendices</a>
   <ul class="collapse">
-  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements"><span class="header-section-number">6.3</span> Acknowledgements</a></li>
+  <li><a href="#acknowledgements" id="toc-acknowledgements" class="nav-link" data-scroll-target="#acknowledgements">Acknowledgements</a></li>
   <li><a href="#json-schema" id="toc-json-schema" class="nav-link" data-scroll-target="#json-schema">JSON Schema</a></li>
   <li><a href="#sec-additional-dimensions" id="toc-sec-additional-dimensions" class="nav-link" data-scroll-target="#sec-additional-dimensions">Additional dimensions</a>
   <ul class="collapse">
@@ -342,7 +341,7 @@
 <p>This document is managed in a revision control system at <a href="https://github.com/gbv/data-validation-report-format" class="uri">https://github.com/gbv/data-validation-report-format</a>, including an <a href="https://github.com/gbv/data-validation-report-format/issues">issue tracker</a>.</p>
 <section id="overview" class="level2" data-number="1.1">
 <h2 data-number="1.1" class="anchored" data-anchor-id="overview"><span class="header-section-number">1.1</span> Overview</h2>
-<p><a href="#fig-validation" class="quarto-xref">Figure&nbsp;1</a> illustrates the validation process and core concepts of this specification: a <strong>validator</strong> checks whether a <strong>document</strong> conforms to some requirements and returns either a list of <strong><a href="#error">errors</a></strong> or a <strong><a href="#report">report</a></strong> including such a list in return. Each error can reference elements of the document via a <strong><a href="#position">position</a></strong> having <a href="#locators">locators</a>. A locator may contain nested errors or reports (not shown in the figure) with nested errors within the referenced element.</p>
+<p><a href="#fig-validation" class="quarto-xref">Figure&nbsp;1</a> illustrates the validation process and core concepts of this specification: a <strong>validator</strong> checks whether a <strong>document</strong> conforms to some requirements and returns either a list of <strong><a href="#error">errors</a></strong> or a <strong><a href="#report">report</a></strong> including such a list in return. Each error can reference elements of the document via a <strong><a href="#position">position</a></strong> having <a href="#locators">locators</a>. A locator may further contain nested errors or reports.</p>
 <div id="fig-validation" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-validation-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -564,7 +563,7 @@ Example&nbsp;4: Invalid JSON on multiple levels
 </div>
 </div>
 </div>
-<p>A <strong>nested error</strong> is an error that is listed as part of a [locator] in its field <code>errors</code> or <code>reports</code>.</p>
+<p>A <strong>nested error</strong> is an error that is listed as part of a <a href="#locators">locator</a> in its field <code>errors</code> or <code>reports</code>.</p>
 <div class="callout callout-style-simple callout-warning">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -927,7 +926,7 @@ Unicode strings are sequences as well but its not obvious whether the elements a
 <i class="callout-icon"></i>
 </div>
 <div class="callout-body-container">
-<p>Tabular selection locator is a proper subset of <a href="https://tools.ietf.org/html/rfc7111">RFC 7111</a> URI Fragment Identifier, excluding multi-selections, so every elememt referenced by a table selected is tabular data for its part.</p>
+<p>Tabular selection locator is a proper subset of <a href="https://tools.ietf.org/html/rfc7111">RFC 7111</a> URI Fragment Identifier, excluding multi-selections, so every elememt referenced by a table selection is also tabular data.</p>
 </div>
 </div>
 </div>
@@ -949,8 +948,8 @@ Unicode strings are sequences as well but its not obvious whether the elements a
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode ebnf code-with-copy"><code class="sourceCode ebnf"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="dt">XMLLocator</span>       <span class="cf">::=</span>  <span class="cf">(</span> <span class="st">"/"</span> <span class="fu">NodeTest</span> <span class="cf">)+</span> <span class="cf">(</span> <span class="st">"/"</span> <span class="fu">AttributeTest</span> <span class="cf">)?</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="dt">NodeTest</span>         <span class="cf">::=</span>  <span class="fu">QName</span> <span class="fu">Position</span><span class="cf">?</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="dt">AttributeTest</span>    <span class="cf">::=</span>  <span class="st">"@"</span> <span class="fu">QName</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="dt">Position</span>         <span class="cf">::=</span>  <span class="st">"[ PositiveInteger "</span><span class="er">]"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>Applications MUST NOT use one XML Locator to reference multiple XML elements. For this reason, applications MAY always append the string <code>[1]</code> to an XML Locator if it does not end with a <code>Position</code> or <code>AttributeTest</code>.</p>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="dt">Position</span>         <span class="cf">::=</span>  <span class="st">"["</span> <span class="fu">PositiveInteger</span> <span class="st">"]"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Applications MUST NOT use one XML Locator to reference multiple XML elements. Applications MAY always append the string <code>[1]</code> to an XML Locator if it does not end with a <code>Position</code> or an <code>AttributeTest</code>.</p>
 <div class="callout callout-style-simple callout-note">
 <div class="callout-body d-flex">
 <div class="callout-icon-container">
@@ -985,18 +984,21 @@ Unicode strings are sequences as well but its not obvious whether the elements a
 <li><p>M. Hausenblas, E. Wilde, and J. Tennison: <em>URI Fragment Identifiers for the text/csv Media Type.</em> RFC 7111, January 2014. <a href="https://tools.ietf.org/html/rfc7111" class="uri">https://tools.ietf.org/html/rfc7111</a></p></li>
 <li><p>A. Wright, H. Andrews, B. Hutton, and G. Dennis: <em>JSON Schema Draft 2020-12</em>. June 2022. <a href="https://json-schema.org/draft/2020-12/json-schema-core.html" class="uri">https://json-schema.org/draft/2020-12/json-schema-core.html</a></p></li>
 </ul>
+<!--
+# Changelog {-}
+
+This is still a draft.
+
+Version 1.0.0 will introduce error reports based on results of project AQinDa.
+
+Version 0.1.0 was written and made public in June 2025 after the format had been used since Feburary 2022.
+-->
 </section>
-</section>
-<section id="changelog" class="level1 unnumbered">
-<h1 class="unnumbered">Changelog</h1>
-<p>This is still a draft.</p>
-<p>Version 1.0.0 will introduce error reports based on results of project AQinDa.</p>
-<p>Version 0.1.0 was written and made public in June 2025 after the format had been used since Feburary 2022.</p>
 </section>
 <section id="appendices" class="level1 unnumbered">
 <h1 class="unnumbered">Appendices</h1>
-<section id="acknowledgements" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="acknowledgements"><span class="header-section-number">6.3</span> Acknowledgements</h2>
+<section id="acknowledgements" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="acknowledgements">Acknowledgements</h2>
 <p>Thanks to Markus Matoni and Arno Kesper for their work on <a href="https://gepris.dfg.de/gepris/projekt/521659096">project AQinDa</a> that resulted in the inclusion of error reports in this specification.</p>
 </section>
 <section id="json-schema" class="level2 unnumbered">
