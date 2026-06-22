@@ -1,7 +1,7 @@
 ---
 title: Data Validation Report Format
 subtitle: Version 0.9.0
-#doi: 10.5281/zenodo......
+doi: 10.5281/zenodo.20792191
 authors:
 - name: Jakob Voß
   orcid: 0000-0002-7613-4123
@@ -494,6 +494,10 @@ Version 1.0.0 will introduce error reports based on results of project AQinDa.
 Version 0.1.0 was written and made public in June 2025 after the format had been used since Feburary 2022.
 
 # Appendices {-}
+
+## Acknowledgements
+
+Thanks to Markus Matoni and Arno Kesper for their work on [project AQinDa](https://gepris.dfg.de/gepris/projekt/521659096) that resulted in the inclusion of error reports in this specification.
 
 ## JSON Schema {-}
 
