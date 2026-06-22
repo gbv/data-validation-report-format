@@ -4,6 +4,8 @@ This repository contains the specification of a data format to report validation
 
 The current draft is made available at <https://gbv.github.io/data-validation-report-format/>.
 
+Releases are published as <https://doi.org/10.5281/zenodo.20792190>.
+
 ## tl;dr
 
 Errors have a `message`, optional `level`, `types`, and a `position`. The **position** can be given in with multiple locators, for instance by character position, line number, and line/column:
