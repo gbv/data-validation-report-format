@@ -22,6 +22,8 @@ crossref:
   lst-prefix: "Example"
   lst-title: "Example"
 lst-cap-location: bottom
+syntax-definitions:
+ - ebnf.xml
 
 format:
   html:

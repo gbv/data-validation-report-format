@@ -8,45 +8,45 @@ authors:
   affiliations:
    - name: Verbundzentrale des GBV (VZG)
 abstract: |
- This document specifies a data format to report validation errors of digital objects with error positions independent from specifid document models.
+ This document specifies a data format to report validation errors of digital objects with error positions independent from specific document models.
 ---
 
 # Introduction
 
 > _All data is wrong, but some data is wrong on multiple levels._
 
-Data validation is a crucial part of management of data quality and interoperability. Validation is applied in many ways and contexts, for instance input forms and editors with visual feedback or schema languages with formal error reports. The diversity of use cases imply a variety of error results. Existing standards for error reporting such as such as [JUnit XML](https://github.com/testmoapp/junitxml) and [Test Anything Protocol](https://testanything.org/) have narrow use cases in software development.
+Data validation is a crucial part of management of data quality and interoperability. Validation is applied in many ways and contexts, for instance, input forms and editors with visual feedback or schema languages with formal error reports. The diversity of use cases implies a variety of error results. Existing standards for error reporting such as [JUnit XML](https://github.com/testmoapp/junitxml) and [Test Anything Protocol](https://testanything.org/) have narrow use cases in software development.
 
-The specification of **Data Validation Report Format** (DVRF) has two goals:
+The specification of the **Data Validation Report Format** (DVRF) has two goals:
 
 - unify how validation errors are reported by different applications
 - reference positions of errors in validated documents, independent from document models
 
-Last but not least the format should help to better separate validation and presentation of validation results, so both can be solved by different applications.
+Last but not least, the format should help to better separate validation and presentation of validation results so both can be solved by different applications.
 
 :::{.callout-caution}
-The format is strictly limited to **errors** and **error positions**. Neither does it include other kinds of analysis results such as statistics and summaries of documents, nor does in include details about validation such as test cases, schema rules, and individual constraints. Errors can be linked to additional information with error types but the semantics of these types is out of the scope of this specification.
+The format is strictly limited to **errors** and **error positions**. Nor does it include other kinds of analysis results such as statistics and summaries of documents, nor does it include details about validation such as test cases, schema rules, and individual constraints. Errors can be linked to additional information with error types, but the semantics of these types is out of the scope of this specification.
 :::
 
 This document is managed in a revision control system at <https://github.com/gbv/data-validation-report-format>, including an [issue tracker](https://github.com/gbv/data-validation-report-format/issues).
 
 ## Overview
 
-@fig-validation illustrates the validation process and core concepts of this specification: a **validator** checks whether a **document** conforms to some requirements and returns either a list of **[errors](#error)** or a **[report](#report)** including such list in return. Each error can reference elements of the document via a **[position](#position)** having [locators](#locators). A locator may contain nested errors or reports (not shown in the figure) with nested errors within the referenced element.
+@fig-validation illustrates the validation process and core concepts of this specification: a **validator** checks whether a **document** conforms to some requirements and returns either a list of **[errors](#error)** or a **[report](#report)** including such a list in return. Each error can reference elements of the document via a **[position](#position)** having [locators](#locators). A locator may contain nested errors or reports (not shown in the figure) with nested errors within the referenced element.
 
 ![Validation process and result](overview.svg){#fig-validation}
 
 ## Background
 
-Every document conforms to a **document model**. For instance JSON documents conforms to the JSON model, and character strings conforms to the model "sequence of characters from a known character set". Document models come with **encodings** how to express documents in form of documents on a lower level. For instance JSON documents can be encoded with JSON syntax as Unicode strings and Unicode strings can be encoded with UTF-8 as sequences of bytes (solid arrows in @fig-encodings-and-locators).
+Every document conforms to a **document model**. For instance, JSON documents conform to the JSON model, and character strings conforms to the model "sequence of characters from a known character set." Document models come with **encodings** that express documents in the form of documents on a lower level. For instance, JSON documents can be encoded with JSON syntax as Unicode strings and Unicode strings can be encoded with UTF-8 as sequences of bytes (solid arrows in @fig-encodings-and-locators).
 
 :::{.callout-note}
-Eventually all documents are given as digital objects, encoded as sequence of bytes. Encodings using a sequence of characters are also called textual data formats, in contrast to binary data formats.
+Eventually all documents are given as digital objects, encoded as sequences of bytes. Encodings using a sequence of characters are also called textual data formats, in contrast to binary data formats.
 :::
 
-An [error position](#positions) is given in form of one or more **locators**, each having a [**dimension**](#dimensions) and an **address**. Each dimension refers to a **locator format** for a set of document models. For instance [JSON Pointer] refers to JSON, character and line numbers refer to character strings with defined line breaks, and offsets refer to sequences of elements (@fig-encodings-and-locators). Other examples of locator formats include [XPath] for XML, and row/column for [tabular data](#tabular-document-models).
+An [error position](#positions) is given in the form of one or more **locators**, each having a [**dimension**](#dimensions) and an **address**. Each dimension refers to a **locator format** for a set of document models. For instance, [JSON Pointer] refers to JSON; character and line numbers refer to character strings with defined line breaks; and offsets refer to sequences of elements (@fig-encodings-and-locators). Other examples of locator formats include [XPath] for XML and row/column for [tabular data](#tabular-document-models).
 
-Locators can contain **nested errors** or reports to reference more specific errors on a lower level of description, for instance to files in an archive or individual records in a file.
+Locators can contain **nested errors** or reports to reference more specific errors on a lower level of description, for instance, to files in an archive or individual records in a file.
 
 ::: {#fig-encodings-and-locators}
 
@@ -76,7 +76,7 @@ Example of encodings and locator formats
 
 ## Examples
 
-Documents can be invalid on many levels. For example the string `{"åå":5}` is valid JSON but it might be invalid if element `åå` is expected to hold a string instead of a number (@lst-example-1). The error can be located with JSON Pointer in the JSON document and with character and line number:
+Documents can be invalid on many levels. For example, the string `{"åå":5}` is valid JSON, but it might be invalid if element `åå` is expected to hold a string instead of a number (@lst-example-1). The error can be located with a JSON Pointer in the JSON document and with character and line number:
 
 ```{#lst-example-1 .json lst-cap="Error in a JSON document"}
 {{< include examples/example-1.json >}}
@@ -88,13 +88,13 @@ The string could also be part of a larger, newline-delimited JSON document. In t
 {{< include examples/example-4.json >}}
 ```
 
-The document could also be invalid at JSON syntax level, for example if the closing `}` is missing (@lst-example-2):
+The document could also be invalid at JSON syntax level, for example, if the closing `}` is missing (@lst-example-2):
 
 ```{#lst-example-2 .json lst-cap="Error in JSON syntax"}
 {{< include examples/example-2.json >}}
 ```
 
-A similar document could be invalid on byte level. The following table illustrates the document from @lst-example-1 with ninth byte replaced by a value not allowed in UTF-8. It is common practice to replace such bytes with the Unicode replacement character `U+FFFD` but the resulting Unicode string is invalid JSON syntax still (@lst-3). The example also illustrates another locator format `linecol` to give a character position by line and column.
+A similar document could be invalid on a byte level. The following table illustrates the document from @lst-example-1 with ninth byte replaced by a value not allowed in UTF-8. It is common practice to replace such bytes with the Unicode replacement character `U+FFFD`, but the resulting Unicode string is still invalid JSON syntax (@lst-3). The example also illustrates another locator format `linecol` to give a character position by line and column.
 
 +---------------:+:------:+:------:+:------:+:------:+:------:+:------:+:------:+:------:+:------:+:------:+
 | **Byte**       |`7b`    |`22`    |`c3`    |`a5`    |`c3`    |`a5`    |`22`    |`3a`    |`c0`    |`7d`    |
@@ -137,20 +137,20 @@ Only section [2](#errors) to [5](#reports), excluding examples and notes, and th
 
 An **error** is a JSON object with the following constraints: 
 
-- an error SHOULD have a field `message` with an **error message**, being a non-empty string.
+- An error SHOULD have a field `message` with an **error message**, being a non-empty string.
   Applications MAY use a default value for error messages.
 
-- an error MAY have field `types` with an array of **error types**, each being a non-empty string.
+- An error MAY have a field `types` with an array of **error types**, each being a non-empty string.
   Error types can be used for grouping errors and to reference a cause or constraint being violated
-  by the error. Error types SHOULD be URIs ([RFC 3986]) local identifiers
-  with same syntax as the name of a [dimension](#dimensions).
+  by the error. Error types SHOULD be URIs ([RFC 3986]) or local identifiers
+  with the same syntax as the name of a [dimension](#dimensions).
 
-- an error MAY have field `level` with an **error level**, being one of the strings `error`, `warning`, or `info`. Application MUST use default value `error` if this field is not given.
+- An error MAY have a field `level` with an **error level**, being one of the strings `error`, `warning`, or `info`. Application MUST use default value `error` if this field is not given.
 
-- an error MAY have field `position` with a [**position**](#positions).
+- An error MAY have a field `position` with a [**position**](#positions).
   Applications MUST NOT differentiate between no position and an empty position (an empty array or an empty JSON object).
 
-Applications MUST use individual errors for individual positions of the kind of observation represented by the error. For instance a malformed character ocurring two times in a document results in two errors.
+Applications MUST use individual errors for individual positions of the kind of observation represented by the error. For instance, a malformed character occurring two times in a document results in two errors.
 
 ::: {.callout-note}
 By this definition the error `{}` is allowed and equivalent to `{"level":"error"}`.
@@ -159,20 +159,20 @@ By this definition the error `{}` is allowed and equivalent to `{"level":"error"
 A **nested error** is an error that is listed as part of a [locator] in its field `errors` or `reports`.
 
 ::: {.callout-warning}
-Language and localization of error messages, and details of error types such as name and URL are out of the scope of this specification.
+Language and localization of error messages and details of error types such as name and URL are out of the scope of this specification.
 :::
 
 # Positions
 
-The position of an error is given
+The position of an error is given:
 
-- either in **condense form** with a [**locator map**](#locator-maps),
+- either in **condensed form** with a [**locator map**](#locator-maps),
 
-- or in **full form** as JSON array of [**locators**](#locators).
+- or in **full form** as a JSON array of [**locators**](#locators).
 
-Every locator map can be transformed to an equivalent array of locators. The reverse transformation is only possible if no locator has [nested errors](#locators) and there is not more then one locator per dimension.
+Every locator map can be transformed to an equivalent array of locators. The reverse transformation is only possible if no locator has [nested errors](#locators) and there is not more than one locator per dimension.
 
-A position with multiple locator of the same dimension does nor imply multiple errors but it references multiple elements involved in the same error (for instance a mismatch between two elements). Locators of different dimensions in the same position SHOULD refer to the the same elements or have a common intersection.
+A position with multiple locators of the same dimension does not imply multiple errors, but it references multiple elements involved in the same error (for instance, a mismatch between two elements). Locators of different dimensions in the same position SHOULD refer to the same elements or have a common intersection.
 
 [locator format]: #locator-formats
 [locator map]:: #locator-maps
@@ -185,7 +185,7 @@ A **locator map** is a JSON object that maps names of [**dimensions**](#dimensio
 { "line": "7", "char": "42" }
 ```
 
-A locator map can be transformed to an equivalent array of [locators](#locators) with key and value of the JSON object entries mapped to field `dimension` and `address` of each locator.
+A locator map can be transformed to an equivalent array of [locators](#locators) with the key and value of the JSON object entries mapped to the field `dimension` and `address` of each locator.
 
 ```{#lst-locator-map .json lst-cap="Equivalent array of locators"}
 [
@@ -194,19 +194,19 @@ A locator map can be transformed to an equivalent array of [locators](#locators)
 ]
 ```
 
-Applications MAY restrict their support of Data Validation Report Format to positions in condense form being  locator maps.
+Applications MAY restrict their support of the Data Validation Report Format to positions in condensed form being locator maps.
 
 ## Locators
 
-A locator references an element of a document. A **Locator** is a JSON object with the following constraints:
+A locator references an element of a document. A **locator** is a JSON object with the following constraints:
 
-- the locator MUST have a field `dimension` with the name of a [**dimension**](#dimensions). Some dimensions imply a document model on elements referenced by locators of this dimension.
+- A locator MUST have a field `dimension` with the name of a [**dimension**](#dimensions). Some dimensions imply a document model on elements referenced by locators of this dimension.
 
-- the locator MUST have a field `address` with the **address**, being a string conforming to the **locator format** identified by the name of the **dimension**.
+- A locator MUST have a field `address` with the **address**, being a string conforming to the **locator format** identified by the name of the **dimension**.
 
-- the locator MAY have a field `value` with the referenced element encoded as JSON object that maps document model names (some included in the the table of [dimensions](#dimensions)) to serializations in some reasonable form (typically as JSON string). The value MUST be derived from the document, dimension, and address. Applications MAY replace the field with another value derived from document, dimension, and address. 
+- A locator MAY have a field `value` with the referenced element encoded as a JSON object that maps document model names (some included in the table of [dimensions](#dimensions)) to serializations in some reasonable form (typically as a JSON string). The value MUST be derived from the document, dimension, and address. Applications MAY replace the field with another value derived from document, dimension, and address. 
 
-- the locator MAY have either a field `errors` with an array of [**errors**](#errors) within the located element or a field `reports` with an array of [**reports**](#reports) for the located element. Errors in field `errors` of a locator or as part of a report are called **nested errors**.
+- A locator MAY have either the field `errors` with an array of [**errors**](#errors) within the located element or the field `reports` with an array of [**reports**](#reports) for the located element. Errors in the field `errors` of a locator or as part of a report are called **nested errors**.
 
 ```{#lst-locator .json lst-cap="A simple locator"}
 { "dimension": "line", "address": "7" }
@@ -225,31 +225,29 @@ Nested errors allow to reference locations within elements of a document. Positi
 
 # Reports
 
-Reports summarize errors of same type with additional metadata. A **Report** is a JSON object with the following constraints:
+Reports summarize errors of the same type with additional metadata. A **report** is a JSON object with the following constraints:
 
-- the report MAY have field `types` with an array of [error types](#errors)
+- A report MAY have a field `types` with an array of [error types](#errors).
 
-- the report MUST have field `errors` with an array of zero or more [errors](#errors), optionally followed by the value `null` to indicate an incomplete list.
+- A report MUST have a field `errors` with an array of zero or more [errors](#errors), optionally followed by the value `null` to indicate an incomplete list.
 
-- the report SHOULD have field `totalErrors` with a non-negative integer number. The number MUST be equal to the length of array `errors` if the array does not contain value `null` and it MUST be equal or larger then then length of the array if it does contain `null`.
+- A report SHOULD have a field `totalErrors` with a non-negative integer number. The number MUST be equal to the length of array `errors` if the array does not contain the value `null`, and it MUST be equal to or larger than the length of the array if it does contain `null`.
 
-- the report MAY have field `compliances` with an array of [positions], optionally followed by the value `null` to indicate an incomplete list. Positions in field `compliances` MUST NOT contain nested errors.
+- A report MAY have a field `compliances` with an array of [positions], optionally followed by the value `null` to indicate an incomplete list. Positions in field `compliances` MUST NOT contain nested errors.
 
-- the report MAY have field `totalCompliances` with a non-negative integer number. The number MUST be equal to the length of array `compliances` if the array does not contain value `null` and it MUST be equal or larger then then length of the array if it does contain `null`. Applications MUST compliances
+- A report MAY have a field `totalCompliances` with a non-negative integer number. The number MUST be equal to the length of array `compliances` if the array does not contain the value `null`, and it MUST be equal or larger than the length of the array if it does contain `null`.
 
-- the report MAY have field `skipped` with an array of [positions], optionally followed by the value `null` to indicate an incomplete list. Positions in field `skipped` MUST NOT contain nested errors.
+- A report MAY have a field `skipped` with an array of [positions], optionally followed by the the value `null` to indicate an incomplete list. Positions in field the `skipped` MUST NOT contain nested errors.
 
-- the report MAY have field `totalSkipped` with a non-negative integer number. The number MUST be equal to the length of array `skipped` if the array does not contain value `null` and it MUST be equal or larger then then length of the array if it does contain `null`. Applications MUST compliances
+- A report MAY have a field `totalSkipped` with a non-negative integer number. The number MUST be equal to the length of array `skipped` if the array does not contain the value `null`, and it MUST be equal or larger than the length of the array if it does contain `null`.
 
-- the report MAY have field `totalFindings` with a non-negative integer number. The number MUST be equal to the sum of `totalCompliances`, `totalErrors`, and `totalSkipped` if all of the these fields are given.
+- A report MAY have a field `totalFindings` with a non-negative integer number. The number MUST be equal to the sum of `totalCompliances`, `totalErrors`, and `totalSkipped` if all of these fields are given.
 
-- the report SHOULD have field `partial` with a boolean value or an array of [errors] to indicate when the document was fully validated. The errors listed in this array MUST NOT be confused with validation errors found by validation. Instead they refer to errors of the execution of validation process.
+- A report SHOULD have a field `partial` with a boolean value or an array of [errors] to indicate when the document was fully validated. The errors listed in this array MUST NOT be confused with validation errors found by validation. Instead, they refer to errors of the execution of the validation process.
 
-- the report MAY have field `duration` with a non-negative number giving the time in seconds it took to create the report.
+- A report MAY have a field `duration` with a non-negative number giving the time in seconds it took to create the report.
 
-Applications MUST process [errors] listed in field `errors` as following:
-
-- every error type of the report is added to field `types` of the error unless it is already exist in the array
+Applications MUST process [errors] listed in field `errors` by implicitly adding every error type of the report to field `types` of the error, unless it already exists in the array.
 
 
 ```{#lst-10 .json lst-cap="A locator for a file with a report"}
@@ -260,13 +258,13 @@ Applications MUST process [errors] listed in field `errors` as following:
 
 A **dimension** is a defined method to reference elements of a document. Each dimension has:
 
-- a unique **name**, being a string that start with lowercase letter `a` to `z`, optionally followed by a sequence of lowercase letters and digits `0` to `9`.
+- A unique **name**, being a string that starts with a lowercase letter `a` to `z`, optionally followed by a sequence of lowercase letters and digits `0` to `9`.
 
-- a **locator format**, being a formal language of Unicode strings to encode references to elements of a document. The sets of strings of the language are called **addresses**.
+- A **locator format**, being a formal language of Unicode strings to encode references to elements of a document. The sets of strings of the language are called **addresses**.
 
-- a **document model** matching the **locator format**.
+- A **document model** matching the **locator format**.
 
-Some dimensions imply a document model on referenced elements (element model). For instance a [line number] references a character string and a [JSON Pointer] references a JSON value.
+Some dimensions imply a document model on referenced elements (element model). For instance, a [line number] references a character string and a [JSON Pointer] references a JSON value.
 
 Applications SHOULD support the following dimensions. The [appendix](#sec-additional-dimensions) contains a non-normative note on additional dimensions not fully specified yet.
 
@@ -285,10 +283,10 @@ name            | locator format          | document model                      
 `jsonpointer`   | [JSON Pointer]          | JSON value (`json`)                     | JSON value
 `xpath`         | [XML Locator]           | XML or compatible hierarchies (`xml`)   | XML element or attribute
 
-The **identifier** locator format with name `id` and locator values being arbitrary Unicode strings subsumes every other locator format because locators of same value refererence the same element. It can be used for any kind of formalized reference to elements of a document, but its main use case are record identifiers, unique names and similar identifier systems.
+The **identifier** locator format with name `id` and locator values being arbitrary Unicode strings subsumes every other locator format because locators of the same value reference the same element. It can be used for any kind of formalized reference to elements of a document, but its main use cases are record identifiers, unique names, and similar identifier systems.
 
 :::{.callout-note}
-Dimensions are a subset of query languages. A dimension value refererences one element from a document. A query language (e.g. JSONPath, full XPath...) can locate a set of elements.
+Dimensions are a subset of query languages. A dimension value references one element from a document. A query language (e.g., JSONPath, full XPath...) can locate a set of elements.
 :::
 
 
@@ -302,7 +300,7 @@ PositiveInteger     ::=  [1-9] [0-9]*
 
 ### Offset number
 
-The **offset number** locator format with name `number` is used to reference an element in a sequence of elements. The locator value is non-negative integer encoded as string without leading zeroes. The first element has number zero (locator value `0`).
+The **offset number** locator format with name `number` is used to reference an element in a sequence of elements. The locator value is non-negative integer encoded as a string without leading zeros. The first element has number zero (locator value `0`).
 
 ```{.ebnf}
 OffsetNumber        ::=  NonNegativeInteger
@@ -311,7 +309,7 @@ NonNegativeInteger  ::=  "0" | PositiveInteger
 
 ### Character number
 
-The **character number** locator format with name `char` is used to reference a character in a sequence of characters from a character set. The locator value is a positive integer encoded as string without leading zeroes. The first character has number one (locator value `1`).
+The **character number** locator format with name `char` is used to reference a character in a sequence of characters from a character set. The locator value is a positive integer encoded as a string without leading zeros. The first character has number one (locator value `1`).
 
 In Unicode strings, this locator format refers to code points instead of visual characters.
 
@@ -325,7 +323,7 @@ CharacterNumber ::=  PositiveInteger
 
 ### Line number
 
-The **line number** locator format with name `line` is used to reference a line in a sequence of lines, each being a character string. The locator value is a positive integer encoded as string without leading zeroes. The first line has number one (locator value `1`).
+The **line number** locator format with name `line` is used to reference a line in a sequence of lines, each being a character string. The locator value is a positive integer encoded as a string without leading zeros. The first line has number one (locator value `1`).
 
 :::{.callout-note}
 The document model of line number is not a character string with line breaks but a sequence of character strings.  Splitting of character strings into lines is beyond the scope of this specification because multiple definitions of line break exist (U+0A optionally followed by U+0D, U+0D, U+0B, U+0C, U+85, U+2028, U+2029...).
@@ -337,7 +335,7 @@ LineNumber      ::=  PositiveInteger
 
 ### Line numbers
 
-The **line numbers** locator format with name `lines` is used to reference a sequence of consecutive line (each being a character string) from a sequence of lines. The locator value is two positive integers encoded as string without leading zeroes and separated with minus `-`. The second integer MUST NOT be larger than the first. The first line has number one (locator value `1`).
+The **line numbers** locator format with name `lines` is used to reference a sequence of consecutive lines (each being a character string) from a sequence of lines. The locator value is two positive integers encoded as a string without leading zeros and separated with a minus (`-`). The second integer MUST NOT be larger than the first. The first line has number one (locator value `1`).
 
 ```{.ebnf}
 LineNumbers     ::=  StartLine "-" EndLine
@@ -347,7 +345,7 @@ EndLine         ::=  PositiveInteger
 
 ### Line and Column
 
-The **line and column** locator format with name `linecol` is used to reference a character in a sequence of character strings. The locator value consists of a [line number] and a [character number] within the line, separated by colon (`:`).
+The **line and column** locator format with name `linecol` is used to reference a character in a sequence of character strings. The locator value consists of a [line number] and a [character number] within the line, separated by a colon (`:`).
 
 ```{.ebnf}
 LineCol         ::=  LineNumber ":" CharacterNumber
@@ -356,28 +354,40 @@ LineCol         ::=  LineNumber ":" CharacterNumber
 ## Tabular document models
 
 :::{.callout-note}
-Tabular data is known from spreadsheet software and CSV files. This document model does *not* include table headers! A table with header column and unique column names can better be mapped to a [hierarchical model](#hierarchical-document-models) or modelled as sequence of indexed sets. For instance an error in column `title` of the third row of a table (not counting the header row) could have the following [locator](#locators):
+Tabular data is known from spreadsheet software and CSV files. This document model does *not* include table headers! A table with a header column and unique column names can better be mapped to a [hierarchical model](#hierarchical-document-models) or modelled as a sequence of indexed sets. For instance, an error in the column `title` of the third row of a table (not counting the header row) could have the following [locator](#locators):
 
 ```json
 {
   "dimension": "offset", "address": "3",
-  "errors": [ { "position": [ 
-    { "dimension": "id", "address": "title" } ] } ]
+  "errors": [ {
+    "message": "Malformed 'title' field!",
+    "position": [ { "dimension": "id", "address": "title" } ] 
+  } ]
 }
 ```
 :::
 
 ### Cell reference
 
-The **cell reference** locator format with name `cell` is used to reference an individual cell in tabular data. The locator value consists of a pair of column and row. Columns are given in hexavigesimal system (A=1, B=2..., Z=26, AA=27, AB=28...) and rows are given by numbers, starting from 1.
+The **cell reference** locator format with name `cell` is used to reference an individual cell in tabular data. The locator value consists of a pair of column and row. Columns are given in the hexavigesimal system (A=1, B=2..., Z=26, AA=27, AB=28...) and rows are given by numbers, starting from 1.
+
+```{.ebnf}
+CellRef         ::=  ColumnRef RowRef
+ColumnRef       ::=  [A-Z]+
+RowRef          ::=  PositiveInteger
+```
 
 ### Cell range
 
 The **cell range** locator format with name `cells` is used to reference a selection of connected cells in tabular data. The locator value consists of a cell reference, optionally followed by colon (`:`) and another cell reference.
 
+```{.ebnf}
+CellRange       ::=  CellRef ":" CellRef
+```
+
 ### Table selection
 
-The **table selection** locator format with name `rfc7111` is used to reference a selection of connected cells in tabular data. It can reference [cell references](#cell-references), [cell ranges](#cell-ranges), full rows and full columns. The locator format follows the following grammar:
+The **table selection** locator format with name `rfc7111` is used to reference a selection of connected cells in tabular data. It can reference [cell references](#cell-references), [cell ranges](#cell-ranges), full rows, and full columns. The locator format follows the following grammar:
 
 ```{.ebnf}
 TableSelection  ::=  Cells | Rows | Columns
@@ -397,7 +407,7 @@ Tabular selection locator is a proper subset of [RFC 7111] URI Fragment Identifi
 
 ### File path
 
-The **file path** locator format with name `file` is used to reference a file or directory in a directory tree. The locator value must be a POSIX path, being a string optionally beginning with a slash (`/`), followed by zero or more file names, separated by slash. A file name is a non-empty sequence of Unicode code points excluding the slash (`U+002F`) and the null byte (`U+0000`).
+The **file path** locator format with name `file` is used to reference a file or directory in a directory tree. The locator value must be a POSIX path, being a string optionally beginning with a slash (`/`), followed by zero or more file names separated by slash. A file name is a non-empty sequence of Unicode code points excluding the slash (`U+002F`) and the null byte (`U+0000`).
 
 ### JSON Pointer
 
@@ -407,7 +417,7 @@ The **JSON Pointer** locator format with name `jsonpointer` is used to reference
 
 ### XML Locator
 
-The **XML Locator** format follows the following grammar with rule [QName] defined in Namespaces in XML 1.0 specification:
+The **XML Locator** format follows the following grammar with the rule [QName] defined in Namespaces in XML 1.0 specification:
 
 ```{.ebnf}
 XMLLocator       ::=  ( "/" NodeTest )+ ( "/" AttributeTest )?
@@ -416,10 +426,10 @@ AttributeTest    ::=  "@" QName
 Position         ::=  "[ PositiveInteger "]"
 ```
 
-Applications MUST NOT use one XML Locator to reference multiple XML elements. For this reason applications MAY always append the string `[1]` to an XML Locator if it does not end with a `Position` or `AttributeTest`.
+Applications MUST NOT use one XML Locator to reference multiple XML elements. For this reason, applications MAY always append the string `[1]` to an XML Locator if it does not end with a `Position` or `AttributeTest`.
 
 ::: {.callout-note}
-XML Locator is a proper subset of (X)Path Expressions from [XPath] specifications, limited to reference individual XML elements or attributes.
+XML Locator is a proper subset of (X)Path Expressions from [XPath] specifications limited to reference *individual* XML elements or attributes.
 :::
 
 [QName]: https://www.w3.org/TR/REC-xml-names/#NT-QName
