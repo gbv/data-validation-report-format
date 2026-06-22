@@ -15,11 +15,14 @@ jobs:
         uses: actions/checkout@v4
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
-        #with:
-        #  tinytex: true
-      - name: Render and Publish
+      - name: Render
+        uses: quarto-dev/quarto-actions/render@v2
+        with:
+          to: html
+      - name: Publish
         uses: quarto-dev/quarto-actions/publish@v2
         with:
           target: gh-pages
+          render: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

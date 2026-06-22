@@ -32,7 +32,7 @@ This document is managed in a revision control system at <https://github.com/gbv
 
 ## Overview
 
-@fig-validation illustrates the validation process and core concepts of this specification: a **validator** checks whether a **document** conforms to some requirements and returns either a list of **[errors](#error)** or a **[report](#report)** including such a list in return. Each error can reference elements of the document via a **[position](#position)** having [locators](#locators). A locator may contain nested errors or reports (not shown in the figure) with nested errors within the referenced element.
+@fig-validation illustrates the validation process and core concepts of this specification: a **validator** checks whether a **document** conforms to some requirements and returns either a list of **[errors](#error)** or a **[report](#report)** including such a list in return. Each error can reference elements of the document via a **[position](#position)** having [locators](#locators). A locator may further contain nested errors or reports.
 
 ![Validation process and result](overview.svg){#fig-validation}
 
@@ -50,7 +50,7 @@ Locators can contain **nested errors** or reports to reference more specific err
 
 ::: {#fig-encodings-and-locators}
 
-```{mermaid fig-align=left}
+```{mermaid fig-align=left width=80%}
 graph LR
    JSON -- JSON syntax --> Unicode
    Unicode -- UTF-8   --> Bytes
@@ -133,6 +133,8 @@ Formal grammars in this specification are given in EBNF notation as defined in E
 
 Only section [2](#errors) to [5](#reports), excluding examples and notes, and the [list of normative references](#normative-references) are normative parts of this specification.
 
+\pagebreak
+
 # Errors
 
 An **error** is a JSON object with the following constraints: 
@@ -156,7 +158,7 @@ Applications MUST use individual errors for individual positions of the kind of 
 By this definition the error `{}` is allowed and equivalent to `{"level":"error"}`.
 :::
 
-A **nested error** is an error that is listed as part of a [locator] in its field `errors` or `reports`.
+A **nested error** is an error that is listed as part of a [locator](#locators) in its field `errors` or `reports`.
 
 ::: {.callout-warning}
 Language and localization of error messages and details of error types such as name and URL are out of the scope of this specification.
@@ -400,7 +402,7 @@ RowPosition     ::=  PositiveInteger
 ```
 
 :::{.callout-note}
-Tabular selection locator is a proper subset of [RFC 7111] URI Fragment Identifier, excluding multi-selections, so every elememt referenced by a table selected is tabular data for its part.
+Tabular selection locator is a proper subset of [RFC 7111] URI Fragment Identifier, excluding multi-selections, so every elememt referenced by a table selection is also tabular data.
 :::
 
 ## Hierarchical document models
@@ -423,10 +425,10 @@ The **XML Locator** format follows the following grammar with the rule [QName] d
 XMLLocator       ::=  ( "/" NodeTest )+ ( "/" AttributeTest )?
 NodeTest         ::=  QName Position?
 AttributeTest    ::=  "@" QName
-Position         ::=  "[ PositiveInteger "]"
+Position         ::=  "[" PositiveInteger "]"
 ```
 
-Applications MUST NOT use one XML Locator to reference multiple XML elements. For this reason, applications MAY always append the string `[1]` to an XML Locator if it does not end with a `Position` or `AttributeTest`.
+Applications MUST NOT use one XML Locator to reference multiple XML elements. Applications MAY always append the string `[1]` to an XML Locator if it does not end with a `Position` or an `AttributeTest`.
 
 ::: {.callout-note}
 XML Locator is a proper subset of (X)Path Expressions from [XPath] specifications limited to reference *individual* XML elements or attributes.
@@ -485,6 +487,7 @@ XML Locator is a proper subset of (X)Path Expressions from [XPath] specification
 - A. Wright, H. Andrews, B. Hutton, and G. Dennis: *JSON Schema Draft 2020-12*.
   June 2022. <https://json-schema.org/draft/2020-12/json-schema-core.html>
 
+<!--
 # Changelog {-}
 
 This is still a draft.
@@ -492,10 +495,11 @@ This is still a draft.
 Version 1.0.0 will introduce error reports based on results of project AQinDa.
 
 Version 0.1.0 was written and made public in June 2025 after the format had been used since Feburary 2022.
+-->
 
 # Appendices {-}
 
-## Acknowledgements
+## Acknowledgements {-}
 
 Thanks to Markus Matoni and Arno Kesper for their work on [project AQinDa](https://gepris.dfg.de/gepris/projekt/521659096) that resulted in the inclusion of error reports in this specification.
 
@@ -537,3 +541,4 @@ The dimension with name `turtle` follows RDF-Turtle syntax to locate a set of RD
 The dimension with name `triplepattern` follows of locator format subset of Property Path Pattern from [SPARQL 1.1 Query Language](https://www.w3.org/TR/sparql11-query/) to locate a set of RDF Triples in a RDF graph.
 
 The locator format can also be used to reference the focus node, path and value of a [SHACL Validation Report](https://www.w3.org/TR/shacl/#validation-report).
+

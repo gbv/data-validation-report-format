@@ -13,6 +13,7 @@ repo-url: https://github.com/gbv/data-validation-report-format
 
 resources:
   - schema.json
+  - overview.svg
 
 callout-appearance: simple
 number-sections: true
@@ -22,6 +23,8 @@ crossref:
   lst-prefix: "Example"
   lst-title: "Example"
 lst-cap-location: bottom
+
+highlight-style: kate
 syntax-definitions:
  - ebnf.xml
 
@@ -29,13 +32,29 @@ format:
   html:
     highlight-style: kate
     css: style.css
-#  pdf:
-#    toc: false
-#    code-tools:
-#      source: false
-#    sansfont: Linux Biolinum O
-#    mainfont: Linux Biolinum O
-#    keeptex: true
+  pdf:
+  # requires install  texlive-fonts-extra
+    documentclass: scrartcl
+    papersize: a4paper
+    toc: true
+    toc-depth: 2    
+    keep-tex: true
+    fontsize: 11pt
+    classoption:
+     - DIV=14
+     - BCOR=0mm
+     - headings=standardclasses
+    fig-pos: "H"
+    template-partials:
+     - title.tex
+    include-in-header:
+      text: |
+        \usepackage{orcidlink}
+        \usepackage[noblocks]{authblk}
+        \renewcommand*{\Authsep}{, }
+        \renewcommand*{\Authand}{, }
+        \renewcommand*{\Authands}{, }
+        \renewcommand\Affilfont{\small}
 
 execute:
   freeze: true
