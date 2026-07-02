@@ -83,5 +83,4 @@ Requires `quarto`.
 
 ## Implementations
 
-See [directory `demo`](demo) for an example implementation of an XML validator supporting this error format.
-
+See <https://github.com/gbv/validation-api-ws>
